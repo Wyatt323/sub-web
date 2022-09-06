@@ -4,6 +4,14 @@
       <el-col>
         <el-card>
           <div slot="header">
+            <svg-icon class="gayhub" icon-class="github" style="float:left" @click="goToProject"/>
+            <svg-icon class="dianbao" icon-class="telegram" style="float:left;margin-left: 10px"
+                      @click="gotoTgChannel"/>
+            <svg-icon class="bilibili" icon-class="bilibili" style="float:right;margin-left:10px"
+                      @click="gotoBiliBili"/>
+            <svg-icon class="youguan" icon-class="youtube" style="float:right;margin-left:10px" @click="gotoYouTuBe"/>
+            <svg-icon class="channel" icon-class="telegram" style="float:right;margin-left: 10px"
+                      @click="gotoTgChannel"/>
             <div style="text-align:center;font-size:15px">订 阅 转 换</div>
           </div>
           <el-container>
@@ -223,8 +231,145 @@
                     @click="dialogUploadConfigVisible = true"
                     icon="el-icon-upload"
                     :loading="loading"
-                >
-       
+                >进阶自定义配置
+                </el-button>
+              </el-form-item>
+              <el-form-item label-width="0px" style="text-align: center">
+                <el-button
+                    style="width: 250px;"
+                    type="success"
+                    icon="el-icon-video-play"
+                    @click="centerDialogVisible = true"
+                >保姆级视频教程
+                </el-button>
+              </el-form-item>
+            </el-form>
+          </el-container>
+        </el-card>
+      </el-col>
+    </el-row>
+   <el-dialog
+        title="请选择需要观看的视频教程"
+        :visible.sync="centerDialogVisible"
+        :show-close="false"
+        width="40vh"
+        top="30vh"
+        center>
+     <div label-width="0px" style="text-align: center">
+      <el-button
+          style="width: 200px;"
+          type="primary"
+          icon="el-icon-video-play"
+          @click="gotoBasicVideo();centerDialogVisible = false"
+      >基础视频教程
+      </el-button>
+     </div>
+     <div label-width="0px" style="text-align: center;margin: 3vh 0 2vh">
+      <el-button
+          style="width: 200px;"
+          type="danger"
+          icon="el-icon-video-play"
+          @click="gotoAdvancedVideo();centerDialogVisible = false"
+      >进阶视频教程
+      </el-button>
+     </div>
+     <div label-width="0px" style="text-align: center;margin: 3vh 0 2vh">
+      <el-button
+          style="width: 200px;"
+          type="warning"
+          icon="el-icon-download"
+          @click="toolsDown"
+      >代理工具集合
+      </el-button>
+     </div> 
+    </el-dialog>
+    <el-dialog
+        :visible.sync="dialogUploadConfigVisible"
+        :show-close="false"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+        width="80%"
+    >
+      <el-tabs v-model="activeName" type="card">
+        <el-tab-pane label="远程配置上传" name="first">
+          <el-link type="danger" :href="sampleConfig" style="margin-bottom: 15px" target="_blank" icon="el-icon-info">
+            参考案例
+          </el-link>
+          <el-form label-position="left">
+            <el-form-item prop="uploadConfig">
+              <el-input
+                  v-model="uploadConfig"
+                  type="textarea"
+                  :autosize="{ minRows: 15, maxRows: 15}"
+                  maxlength="50000"
+                  show-word-limit
+              ></el-input>
+            </el-form-item>
+          </el-form>
+          <div style="float: right">
+            <el-button type="primary" @click="uploadConfig = ''; dialogUploadConfigVisible = false">取 消</el-button>
+            <el-button
+                type="primary"
+                @click="confirmUploadConfig"
+                :disabled="uploadConfig.length === 0"
+            >确 定
+            </el-button>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="JS排序节点" name="second">
+          <el-link type="success" :href="scriptConfig" style="margin-bottom: 15px" target="_blank" icon="el-icon-info">
+            参考案例
+          </el-link>
+          <el-form label-position="left">
+            <el-form-item prop="uploadScript">
+              <el-input
+                  v-model="uploadScript"
+                  placeholder="使用JavaScript对节点进行自定义排序，本功能后端接口自动模版化，JS无需以挤在一行加换行符的形式输入，注意：如果你还需要自定义上传远程配置，此操作务必在其之后进行，另外，如果你需要同时进行JS排序和筛选节点，二三栏的确定按钮只需要任意按一个即可全部提交！！"
+                  type="textarea"
+                  :autosize="{ minRows: 15, maxRows: 15}"
+                  maxlength="50000"
+                  show-word-limit
+              ></el-input>
+            </el-form-item>
+          </el-form>
+          <div style="float: right">
+            <el-button type="primary" @click="uploadScript = ''; dialogUploadConfigVisible = false">取 消</el-button>
+            <el-button
+                type="primary"
+                @click="confirmUploadScript"
+                :disabled="uploadScript.length === 0"
+            >确 定
+            </el-button>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="JS筛选节点" name="third">
+          <el-link type="warning" :href="filterConfig" style="margin-bottom: 15px" target="_blank" icon="el-icon-info">
+            参考案例
+          </el-link>
+          <el-form label-position="left">
+            <el-form-item prop="uploadFilter">
+              <el-input
+                  v-model="uploadFilter"
+                  placeholder="使用JavaScript对节点进行进阶筛选，本功能后端接口自动模版化，JS无需以挤在一行加换行符的形式输入，注意：如果你还需要自定义上传远程配置，此操作务必在其之后进行，另外，如果你需要同时进行JS排序和筛选节点，二三栏的确定按钮只需要任意按一个即可全部提交！"
+                  type="textarea"
+                  :autosize="{ minRows: 15, maxRows: 15}"
+                  maxlength="50000"
+                  show-word-limit
+              ></el-input>
+            </el-form-item>
+          </el-form>
+          <div style="float: right">
+            <el-button type="primary" @click="uploadFilter = ''; dialogUploadConfigVisible = false">取 消</el-button>
+            <el-button
+                type="primary"
+                @click="confirmUploadScript"
+                :disabled="uploadFilter.length === 0"
+            >确 定
+            </el-button>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -281,7 +426,7 @@ export default {
         },
         customBackend: {
           "本地局域网版后端": "http://127.0.0.1:25500/sub?",
-          "站长自建后端【Vless】": "http://wyattvip.xyz:10790/sub?",
+          "站长自建后端": "http://wyattvip.xyz:10790/sub?",
           "肥羊增强型后端【vless+负载均衡】": "https://api.v1.mk/sub?",
           "肥羊备用后端【vless+负载均衡】": "https://sub.d1.mk/sub?",
           "つつ-多地防失联【负载均衡+国内优化】": "https://api.tsutsu.one/sub?",
@@ -305,6 +450,9 @@ export default {
         ],
         remoteConfig: [
           {
+            label: "通用",
+            options: [
+            {
             label: "ACL4SSR",
             options: [
               {
@@ -411,6 +559,24 @@ export default {
               {
                 label: "ACL4SSR_WithGFW 本地 GFW列表",
                 value: "config/ACL4SSR_WithGFW.ini"
+              }
+            ]
+          },
+              {
+                label: "默认",
+                value: "https://raw.githubusercontent.com/Meilieage/webcdn/main/rule/Area_Media_NoAuto.ini"
+              },
+              {
+                label: "默认（自动测速）",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_AdblockPlus.ini"
+              },
+              {
+                label: "默认（索尼电视专用）",
+                value: "https://raw.githubusercontent.com/youshandefeiyang/webcdn/main/SONY.ini"
+              },
+              {
+                label: "默认（附带用于 Clash 的 AdGuard DNS）",
+                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/default_with_clash_adg.yml"
               }
             ]
           },
@@ -709,9 +875,9 @@ export default {
       form: {
         sourceSubUrl: "",
         clientType: "",
-        customBackend: "http://wyattvip.xyz:10790/sub?",
+        customBackend: "https://api.v1.mk/sub?",
         shortType: "https://v1.mk/short",
-        remoteConfig: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full.ini",
+        remoteConfig: "https://raw.githubusercontent.com/Meilieage/webcdn/main/rule/Area_Media_NoAuto.ini",
         excludeRemarks: "",
         includeRemarks: "",
         filename: "",
@@ -810,6 +976,13 @@ export default {
         document.getElementsByTagName('body')[0].setAttribute('class', 'light-mode');
         window.localStorage.setItem('localTheme', 'light-mode');
       }
+    },
+    tanchuang() {
+      this.$alert(`<div style="text-align:center;font-size:15px"><strong><span style="font-size:20px">牧场物语官网：</span><span><a href="https://www.mcwy.org" style="color:red;font-size:20px;text-decoration:none">点击注册</a></span></strong></br><strong><span style="font-size:20px">奈飞合租网站：</span><span><a href="https://www.ihezu.club" style="color:red;font-size:20px;text-decoration:none">点击上车</a></span></strong></br><strong><span style="font-size:20px">IOS外区应用代购：</span><span><a href="https://fk.myue.club" style="color:red;font-size:20px;text-decoration:none">点击查看</a></span></strong></br><strong><span style="font-size:20px">牧场流媒体支持状态实时检测图：</span><span><a href="https://nf.mccloud.vip" style="color:red;font-size:20px;text-decoration:none">点击查看</a></span></strong></br>本站服务器赞助机场-牧场物语，是一家拥有CN2+BGP+IEPL内网专线的高端机场，适合各个价位要求的用户，牧场物语采用最新的奈飞非自制剧解决方案，出口随机更换IP，确保尽可能的每个用户可以用上独立IP，以此来稳定解决奈飞非自制剧的封锁，并推出7*24小时奈飞非自制剧节点自动检测系统，用户再也不用自己手动一个个的乱试节点了，目前牧场的新加坡，台湾等节区域点均可做到24H稳定非自制剧观看！</br></div>`, '信息面板', {
+        confirmButtonText: '确定',
+        dangerouslyUseHTMLString: true,
+        customClass: 'msgbox'
+      });
     },
     onCopy() {
       this.$message.success("已复制");
@@ -1065,10 +1238,10 @@ export default {
           .then(res => {
             this.backendVersion = res.data.replace(/backend\n$/gm, "");
             this.backendVersion = this.backendVersion.replace("subconverter", "SubConverter");
-            let a = this.form.customBackend.indexOf("api.v1.mk") !== -1 || this.form.customBackend.indexOf("sub.d1.mk") !== -1 || this.form.customBackend.indexOf("wyattvip.xyz") !== -1;
+            let a = this.form.customBackend.indexOf("api.v1.mk") !== -1 || this.form.customBackend.indexOf("sub.d1.mk") !== -1;
             let b = this.form.customBackend.indexOf("v.id9.cc") !== -1;
             let c = this.form.customBackend.indexOf("127.0.0.1") !== -1;
-            a ? this.$message.success(`${this.backendVersion}` + "魔改后端支持vless+trojan xtls订阅转换") : b ? this.$message.success(`${this.backendVersion}` + "品云实验性后端支持vless+trojan xtls订阅转换") : c ? this.$message.success(`${this.backendVersion}` + "本地局域网自建版后端") : this.$message.success(`${this.backendVersion}` + "官方原版后端不支持vless/trojan xtls订阅转换");
+            a ? this.$message.success(`${this.backendVersion}` + "官方魔改后端支持vless+trojan xtls订阅转换") : b ? this.$message.success(`${this.backendVersion}` + "品云实验性后端支持vless+trojan xtls订阅转换") : c ? this.$message.success(`${this.backendVersion}` + "本地局域网自建版后端") : this.$message.success(`${this.backendVersion}` + "官方原版后端不支持vless/trojan xtls订阅转换");
           })
           .catch(() => {
             this.$message.error("请求SubConverter版本号返回数据失败，该后端不可用！");
