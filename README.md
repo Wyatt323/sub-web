@@ -1,5 +1,5 @@
 # sub-web-modify
-[本项目](https://wyattvip.xyz:10789)基于[youshandefeiyang/sub-web-modify](https://github.com/youshandefeiyang/sub-web-modify)修改！<br/>
+[本项目](https://wyatt323.github.io)基于[youshandefeiyang/sub-web-modify](https://github.com/youshandefeiyang/sub-web-modify)修改！<br/>
 ## 效果预览：
 ![avatar](https://raw.githubusercontent.com/youshandefeiyang/webcdn/main/dyzh.gif)
 ### 使用方法【以Linux为例】：
